@@ -1,0 +1,6 @@
+{
+    "serviceUrl": "https://marketplace.cursorapi.com/_apis/public/gallery",
+    "itemUrl": "https://marketplace.cursorapi.com/items",
+    "resourceUrlTemplate": "https://marketplace.cursorapi.com/{publisher}/{name}/{version}/{path}",
+    "controlUrl": "https://api2.cursor.sh/extensions-control"
+}

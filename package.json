@@ -1,0 +1,43 @@
+{
+  "name": "run-npm-buttons",
+  "displayName": "Run NPM Buttons",
+  "description": "Динамические кнопки запуска npm-скриптов",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JohnSutray/run-npm-buttons.git"
+  },
+  "version": "0.0.2",
+  "scripts": {
+    "build": "vsce package"
+  },
+  "vsce": {
+    "dependencies": false,
+    "yarn": false
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "workspaceContains:package.json"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "npm-buttons.toggleScript",
+        "title": "Toggle NPM Script"
+      },
+      {
+        "command": "npm-buttons.resetHistory",
+        "title": "Reset NPM Buttons History"
+      }
+    ],
+    "menus": {
+      "statusBar": []
+    }
+  },
+  "publisher": "JohnSutray", 
+  "icon": "icon.png",
+  "categories": ["Other"],
+  "license": "MIT"
+}
