@@ -11,7 +11,7 @@ class NpmButtonsExtension {
     this.ctx = null;
   }
 
-  // ----------------- Общие утилиты -----------------
+  // ----------------- Utilities -----------------
 
   log(msg, data) {
     this.output.appendLine(`[${new Date().toISOString()}] ${msg}`);
@@ -62,7 +62,7 @@ class NpmButtonsExtension {
     );
     item.text = isRunning ? `$(loading~spin) ${label}` : `$(play) ${label}`;
     item.command = { command: "npm-buttons.toggleScript", arguments: [full] };
-    item.tooltip = isRunning ? `Остановить ${label}` : `Запустить ${label}`;
+    item.tooltip = isRunning ? `Stop ${label}` : `Launch ${label}`;
     item.show();
     this.disposables.push(item);
   }
@@ -142,21 +142,21 @@ class NpmButtonsExtension {
     const history = this.getHistory();
     this.refreshUI(history);
 
-    // команда toggle
+    // 'toggle' command
     const cmd = vscode.commands.registerCommand(
       "npm-buttons.toggleScript",
       this.toggleScript.bind(this)
     );
     context.subscriptions.push(cmd);
 
-    // команда reset history
+    // 'reset history' command
     const resetCmd = vscode.commands.registerCommand(
       "npm-buttons.resetHistory",
       this.clearHistory.bind(this)
     );
     context.subscriptions.push(resetCmd);
 
-    // подписчики тасков
+    // task listeners
     vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this));
     vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this));
   }
