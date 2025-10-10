@@ -166,16 +166,22 @@ class NpmButtonsExtension {
     context.subscriptions.push(resetCmd);
 
     // task listeners
-    vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this));
-    vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this));
+    context.subscriptions.push(
+      vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this))
+    );
+    context.subscriptions.push(
+      vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this))
+    );
 
     // configuration listener
-    vscode.workspace.onDidChangeConfiguration(e => {
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration("runNpmButtons.spinIcon")) {
-            this.loadConfig();
-            this.refreshUI(this.getHistory());
+          this.loadConfig();
+          this.refreshUI(this.getHistory());
         }
-    })
+      })
+    )
   }
 
   deactivate() {
