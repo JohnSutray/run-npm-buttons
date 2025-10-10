@@ -1,7 +1,7 @@
 {
   "name": "run-npm-buttons",
   "displayName": "Run NPM Buttons",
-  "description": "Динамические кнопки запуска npm-скриптов",
+  "description": "Dynamic buttons to run npm scripts",
   "repository": {
     "type": "git",
     "url": "https://github.com/JohnSutray/run-npm-buttons.git"
