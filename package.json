@@ -34,6 +34,17 @@
     ],
     "menus": {
       "statusBar": []
+    },
+    "configuration": {
+        "type": "object",
+        "title": "Run NPM Buttons",
+        "properties": {
+            "runNpmButtons.spinIcon": {
+                "type": "boolean",
+                "default": true,
+                "description": "Enable spinning animation for running scripts in the status bar"
+            }
+        }
     }
   },
   "publisher": "JohnSutray", 

@@ -9,6 +9,7 @@ class NpmButtonsExtension {
     this.output = vscode.window.createOutputChannel("NPM Buttons Logs");
     this.rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "";
     this.ctx = null;
+    this.spinIcon = true;
   }
 
   // ----------------- Utilities -----------------
@@ -48,6 +49,11 @@ class NpmButtonsExtension {
     this.refreshUI([]);
   }
 
+  loadConfig() {
+    const cfg = vscode.workspace.getConfiguration("runNpmButtons");
+    this.spinIcon = cfg.get("spinIcon", true);
+  }
+
   // ----------------- UI -----------------
 
   clearStatusBar() {
@@ -60,7 +66,9 @@ class NpmButtonsExtension {
       vscode.StatusBarAlignment.Right,
       100
     );
-    item.text = isRunning ? `$(loading~spin) ${label}` : `$(play) ${label}`;
+    
+    const runningIcon = this.spinIcon ? "$(loading~spin)" : "$(primitive-square)"
+    item.text = isRunning ? `${runningIcon} ${label}` : `$(play) ${label}`;
     item.command = { command: "npm-buttons.toggleScript", arguments: [full] };
     item.tooltip = isRunning ? `Stop ${label}` : `Launch ${label}`;
     item.show();
@@ -138,6 +146,7 @@ class NpmButtonsExtension {
   activate(context) {
     this.ctx = context;
     this.log("🚀 Extension activated");
+    this.loadConfig()
 
     const history = this.getHistory();
     this.refreshUI(history);
@@ -159,6 +168,14 @@ class NpmButtonsExtension {
     // task listeners
     vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this));
     vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this));
+
+    // configuration listener
+    vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration("runNpmButtons.spinIcon")) {
+            this.loadConfig();
+            this.refreshUI(this.getHistory());
+        }
+    })
   }
 
   deactivate() {
