@@ -26,3 +26,10 @@ Or locally with a `.vsix` file:
 ```bash
 vsce package
 code --install-extension run-npm-buttons-0.0.1.vsix
+```
+
+## Configuration
+
+| Setting | Type | Default | Description |
+|----------|------|----------|-------------|
+| `runNpmButtons.spinIcon` | `boolean` | `true` | When a script is running, chooses between showing a spinner icon or a static square icon. |
