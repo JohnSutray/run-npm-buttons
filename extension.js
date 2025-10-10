@@ -177,6 +177,7 @@ class NpmButtonsExtension {
     context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration("runNpmButtons.spinIcon")) {
+          this.log("Configuration changed: runNpmButtons.spinIcon")
           this.loadConfig();
           this.refreshUI(this.getHistory());
         }
