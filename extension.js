@@ -9,9 +9,10 @@ class NpmButtonsExtension {
     this.output = vscode.window.createOutputChannel("NPM Buttons Logs");
     this.rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || "";
     this.ctx = null;
+    this.spinIcon = true;
   }
 
-  // ----------------- Общие утилиты -----------------
+  // ----------------- Utilities -----------------
 
   log(msg, data) {
     this.output.appendLine(`[${new Date().toISOString()}] ${msg}`);
@@ -48,6 +49,11 @@ class NpmButtonsExtension {
     this.refreshUI([]);
   }
 
+  loadConfig() {
+    const cfg = vscode.workspace.getConfiguration("runNpmButtons");
+    this.spinIcon = cfg.get("spinIcon", true);
+  }
+
   // ----------------- UI -----------------
 
   clearStatusBar() {
@@ -60,9 +66,11 @@ class NpmButtonsExtension {
       vscode.StatusBarAlignment.Right,
       100
     );
-    item.text = isRunning ? `$(loading~spin) ${label}` : `$(play) ${label}`;
+    
+    const runningIcon = this.spinIcon ? "$(loading~spin)" : "$(primitive-square)"
+    item.text = isRunning ? `${runningIcon} ${label}` : `$(play) ${label}`;
     item.command = { command: "npm-buttons.toggleScript", arguments: [full] };
-    item.tooltip = isRunning ? `Остановить ${label}` : `Запустить ${label}`;
+    item.tooltip = isRunning ? `Stop ${label}` : `Launch ${label}`;
     item.show();
     this.disposables.push(item);
   }
@@ -138,27 +146,43 @@ class NpmButtonsExtension {
   activate(context) {
     this.ctx = context;
     this.log("🚀 Extension activated");
+    this.loadConfig()
 
     const history = this.getHistory();
     this.refreshUI(history);
 
-    // команда toggle
+    // 'toggle' command
     const cmd = vscode.commands.registerCommand(
       "npm-buttons.toggleScript",
       this.toggleScript.bind(this)
     );
     context.subscriptions.push(cmd);
 
-    // команда reset history
+    // 'reset history' command
     const resetCmd = vscode.commands.registerCommand(
       "npm-buttons.resetHistory",
       this.clearHistory.bind(this)
     );
     context.subscriptions.push(resetCmd);
 
-    // подписчики тасков
-    vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this));
-    vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this));
+    // task listeners
+    context.subscriptions.push(
+      vscode.tasks.onDidStartTaskProcess(this.onTaskStart.bind(this))
+    );
+    context.subscriptions.push(
+      vscode.tasks.onDidEndTaskProcess(this.onTaskEnd.bind(this))
+    );
+
+    // configuration listener
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration("runNpmButtons.spinIcon")) {
+          this.log("Configuration changed: runNpmButtons.spinIcon")
+          this.loadConfig();
+          this.refreshUI(this.getHistory());
+        }
+      })
+    )
   }
 
   deactivate() {
