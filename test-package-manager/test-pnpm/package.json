@@ -1,0 +1,13 @@
+{
+  "name": "test-pnpm",
+  "version": "1.0.0",
+  "description": "test run scripts calls on pnpm",
+  "scripts": {
+    "test:pnpm": "pnpm run job",
+    "job": "node ../someJob.js"
+  },
+  "devDependencies": {
+    "is-odd": "3.0.1"
+  },
+  "private": true
+}
