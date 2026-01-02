@@ -17,8 +17,11 @@
   "engines": {
     "vscode": "^1.85.0"
   },
+  "devDependencies": {
+    "@types/vscode": "^1.107.0"
+  },
   "activationEvents": [
-    "workspaceContains:package.json"
+    "workspaceContains:**/package.json"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -29,26 +32,64 @@
       },
       {
         "command": "npm-buttons.resetHistory",
-        "title": "Reset NPM Buttons History"
+        "title": "Clear"
+      },
+      {
+        "command": "npm-buttons.deleteHistoryItem",
+        "title": "Remove From History",
+        "icon": "$(close)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "npmButtonsContainer",
+          "title": "Run NPM Buttons",
+          "icon": "icon.png"
+        }
+      ]
+    },
+    "views": {
+      "npmButtonsContainer": [
+        {
+          "id": "npmButtonsHistoryView",
+          "name": "History"
+        }
+      ]
+    },
     "menus": {
-      "statusBar": []
+      "statusBar": [],
+      "view/title": [
+        {
+          "command": "npm-buttons.resetHistory",
+          "when": "view == npmButtonsHistoryView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "npm-buttons.deleteHistoryItem",
+          "when": "view == npmButtonsHistoryView && viewItem == npmHistoryItem",
+          "group": "inline"
+        }
+      ]
     },
     "configuration": {
-        "type": "object",
-        "title": "Run NPM Buttons",
-        "properties": {
-            "runNpmButtons.spinIcon": {
-                "type": "boolean",
-                "default": true,
-                "description": "Enable spinning animation for running scripts in the status bar"
-            }
+      "type": "object",
+      "title": "Run NPM Buttons",
+      "properties": {
+        "runNpmButtons.spinIcon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable spinning animation for running scripts in the status bar"
         }
+      }
     }
   },
-  "publisher": "JohnSutray", 
+  "publisher": "JohnSutray",
   "icon": "icon.png",
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "license": "MIT"
 }
